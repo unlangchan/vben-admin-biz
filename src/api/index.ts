@@ -16,3 +16,11 @@ export const api_login = (params: any) =>
       ignoreCancelToken: true,
     },
   });
+export const api_password_login = (params: any) =>
+  defHttp.get({
+    url: '/biz/passwordlogin',
+    params,
+    headers: {
+      ignoreCancelToken: true,
+    },
+  });

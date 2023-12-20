@@ -64,6 +64,8 @@ export default {
     signInFormTitle: '登录',
     mobileSignInFormTitle: '手机登录',
     qrSignInFormTitle: '二维码登录',
+    passwordSignInFormTitle: '密码登录',
+    emailSignInFormTitle: '邮箱登录',
     signUpFormTitle: '注册',
     forgetFormTitle: '重置密码',
 

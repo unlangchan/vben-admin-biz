@@ -5,6 +5,7 @@ import { useI18n } from '/@/hooks/web/useI18n';
 
 export enum LoginStateEnum {
   LOGIN,
+  EMAIL_LOGIN,
   REGISTER,
   CODE,
   RESET_PASSWORD,
@@ -132,6 +133,31 @@ export function useFormRules(formData?: Recordable) {
           password: passwordFormRule,
           confirmPassword: [
             { validator: validateConfirmPassword(formData?.password), trigger: 'change' },
+          ],
+        };
+      // reset password form rules
+      case LoginStateEnum.LOGIN:
+        return {
+          email: [
+            {
+              required: true,
+              type: 'email',
+              message: t('sys.login.emailPlaceholder'),
+              trigger: 'change',
+            },
+          ],
+          password: passwordFormRule,
+        };
+      // reset password form rules
+      case LoginStateEnum.EMAIL_LOGIN:
+        return {
+          email: [
+            {
+              required: true,
+              type: 'email',
+              message: t('sys.login.emailPlaceholder'),
+              trigger: 'change',
+            },
           ],
         };
 

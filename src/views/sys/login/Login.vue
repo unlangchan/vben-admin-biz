@@ -37,6 +37,7 @@
             class="relative w-full px-5 py-8 mx-auto my-auto rounded-md shadow-md xl:ml-16 xl:bg-transparent sm:px-8 xl:p-4 xl:shadow-none sm:w-3/4 lg:w-2/4 xl:w-auto enter-x"
           >
             <LoginForm />
+            <EmailLoginForm />
             <ForgetPasswordForm />
             <RegisterForm />
             <MobileForm />
@@ -51,6 +52,7 @@
   import { computed } from 'vue';
   import { AppLogo, AppLocalePicker } from '/@/components/Application';
   import LoginForm from './LoginForm.vue';
+  import EmailLoginForm from './EmailLoginForm.vue';
   import ForgetPasswordForm from './ForgetPasswordForm.vue';
   import RegisterForm from './RegisterForm.vue';
   import MobileForm from './MobileForm.vue';

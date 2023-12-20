@@ -10,18 +10,19 @@
   >
     <FormItem name="email" class="enter-x">
       <Input
-        class="fix-auto-fill"
         size="large"
         v-model:value="formData.email"
         :placeholder="t('sys.login.email')"
+        class="fix-auto-fill"
       />
     </FormItem>
-    <FormItem name="password" class="enter-x">
-      <InputPassword
+    <FormItem name="code" class="enter-x">
+      <CountdownInput
         size="large"
-        visibilityToggle
-        v-model:value="formData.password"
-        :placeholder="t('sys.login.password')"
+        class="fix-auto-fill"
+        v-model:value="formData.code"
+        :sendCodeApi="sendCodeApi"
+        :placeholder="t('sys.login.emailCode')"
       />
     </FormItem>
 
@@ -74,8 +75,8 @@
 
     <div class="flex justify-evenly enter-x" :class="`${prefixCls}-sign-in-way`">
       <ACol :md="12" :xs="24">
-        <Button block @click="setLoginState(LoginStateEnum.EMAIL_LOGIN)">
-          {{ t('sys.login.emailSignInFormTitle') }}
+        <Button block @click="setLoginState(LoginStateEnum.LOGIN)">
+          {{ t('sys.login.passwordSignInFormTitle') }}
         </Button>
       </ACol>
       <!-- <GithubFilled />
@@ -98,6 +99,7 @@
     TwitterCircleFilled,
   } from '@ant-design/icons-vue';
   import LoginFormTitle from './LoginFormTitle.vue';
+  import { CountdownInput } from '/@/components/CountDown';
 
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -105,16 +107,16 @@
   import { useUserStore } from '/@/store/modules/user';
   import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
   import { useDesign } from '/@/hooks/web/useDesign';
-  //import { onKeyStroke } from '@vueuse/core';
 
-  import { api_password_login } from '/@/api';
+  import { api_login } from '/@/api';
+  //import { onKeyStroke } from '@vueuse/core';
 
   const ACol = Col;
   const ARow = Row;
   const FormItem = Form.Item;
   const InputPassword = Input.Password;
   const { t } = useI18n();
-  const { notification, createErrorModal } = useMessage();
+  const { notification, createErrorModal, createMessage } = useMessage();
   const { prefixCls } = useDesign('login');
   const userStore = useUserStore();
 
@@ -127,23 +129,38 @@
 
   const formData = reactive({
     email: localStorage.getItem('emailcache') || '',
-    password: '',
+    code: '',
   });
 
   const { validForm } = useFormValid(formRef);
 
   //onKeyStroke('Enter', handleLogin);
 
-  const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
+  const getShow = computed(() => unref(getLoginState) === LoginStateEnum.EMAIL_LOGIN);
+
+  async function sendCodeApi() {
+    const data = await validForm();
+    if (!data) return;
+    await api_login({
+      type: 2,
+      email: data.email,
+    });
+    createMessage.success(t('sys.api.operationSuccess'));
+  }
 
   async function handleLogin() {
     const data = await validForm();
     if (!data) return;
+    if (!data.code) {
+      createMessage.warn(t('sys.api.operationSuccess'));
+      return;
+    }
     try {
       loading.value = true;
-      const userInfo = await api_password_login({
+      const userInfo = await api_login({
+        type: 2,
         email: data.email,
-        password: data.password,
+        code: data.code,
       });
       if (rememberMe.value) {
         localStorage.setItem('emailcache', data.email);
