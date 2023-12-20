@@ -116,6 +116,10 @@
       password: data.password,
       code: data.code,
     });
+    formData.email = '';
+    formData.password = '';
+    formData.confirmPassword = '';
+    formData.code = '';
     createMessage.success(t('sys.api.operationSuccess'));
   }
 </script>
