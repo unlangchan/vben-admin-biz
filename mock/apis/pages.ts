@@ -41,7 +41,7 @@ const List_001 = (() => {
 
 export default [
   {
-    url: '/basic-api/api_001',
+    url: '/api/api_001',
     timeout: 100,
     method: 'get',
     response: ({ query }) => {

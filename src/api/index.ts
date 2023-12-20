@@ -8,3 +8,11 @@ export const api_0001 = (params: any) =>
       ignoreCancelToken: true,
     },
   });
+export const api_login = (params: any) =>
+  defHttp.get({
+    url: '/biz/login',
+    params,
+    headers: {
+      ignoreCancelToken: true,
+    },
+  });

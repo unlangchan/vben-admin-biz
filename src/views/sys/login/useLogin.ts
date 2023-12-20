@@ -6,6 +6,7 @@ import { useI18n } from '/@/hooks/web/useI18n';
 export enum LoginStateEnum {
   LOGIN,
   REGISTER,
+  CODE,
   RESET_PASSWORD,
   MOBILE,
   QR_CODE,
@@ -49,7 +50,7 @@ export function useFormValid<T extends Object = any>(formRef: Ref<FormInstance>)
 export function useFormRules(formData?: Recordable) {
   const { t } = useI18n();
 
-  const getAccountFormRule = computed(() => createRule(t('sys.login.accountPlaceholder')));
+  // const getAccountFormRule = computed(() => createRule(t('sys.login.accountPlaceholder')));
   const getPasswordFormRule = computed(() => createRule(t('sys.login.passwordPlaceholder')));
   const getSmsFormRule = computed(() => createRule(t('sys.login.smsPlaceholder')));
   const getMobileFormRule = computed(() => createRule(t('sys.login.mobilePlaceholder')));
@@ -71,7 +72,7 @@ export function useFormRules(formData?: Recordable) {
   };
 
   const getFormRules = computed((): { [k: string]: ValidationRule | ValidationRule[] } => {
-    const accountFormRule = unref(getAccountFormRule);
+    // const accountFormRule = unref(getAccountFormRule);
     const passwordFormRule = unref(getPasswordFormRule);
     const smsFormRule = unref(getSmsFormRule);
     const mobileFormRule = unref(getMobileFormRule);
@@ -84,20 +85,50 @@ export function useFormRules(formData?: Recordable) {
       // register form rules
       case LoginStateEnum.REGISTER:
         return {
-          account: accountFormRule,
+          // account: accountFormRule,
+          email: [
+            {
+              required: true,
+              type: 'email',
+              message: t('sys.login.emailPlaceholder'),
+              trigger: 'change',
+            },
+          ],
+          // code: [
+          //   {
+          //     required: true,
+          //     message: t('sys.login.smsPlaceholder'),
+          //     trigger: 'change',
+          //   },
+          // ],
           password: passwordFormRule,
           confirmPassword: [
             { validator: validateConfirmPassword(formData?.password), trigger: 'change' },
           ],
           policy: [{ validator: validatePolicy, trigger: 'change' }],
-          ...mobileRule,
+          // ...mobileRule,
         };
 
       // reset password form rules
       case LoginStateEnum.RESET_PASSWORD:
         return {
-          account: accountFormRule,
-          ...mobileRule,
+          // account: accountFormRule,
+          // ...mobileRule,
+          email: [
+            {
+              required: true,
+              type: 'email',
+              message: t('sys.login.emailPlaceholder'),
+              trigger: 'change',
+            },
+          ],
+          code: [
+            {
+              required: true,
+              message: t('sys.login.smsPlaceholder'),
+              trigger: 'change',
+            },
+          ],
         };
 
       // mobile form rules
@@ -107,7 +138,15 @@ export function useFormRules(formData?: Recordable) {
       // login form rules
       default:
         return {
-          account: accountFormRule,
+          // account: accountFormRule,
+          email: [
+            {
+              required: true,
+              type: 'email',
+              message: t('sys.login.emailPlaceholder'),
+              trigger: 'change',
+            },
+          ],
           password: passwordFormRule,
         };
     }
