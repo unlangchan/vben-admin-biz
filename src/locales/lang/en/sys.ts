@@ -95,11 +95,13 @@ export default {
     mobilePlaceholder: 'Please input mobile',
     policyPlaceholder: 'Register after checking',
     diffPwd: 'The two passwords are inconsistent',
-
+    emailPlaceholder:'Email is not a valid email!',
+    
     userName: 'Username',
     password: 'Password',
     confirmPassword: 'Confirm Password',
     email: 'Email',
+    emailCode: 'Email code',
     smsCode: 'SMS code',
     mobile: 'Mobile',
   },

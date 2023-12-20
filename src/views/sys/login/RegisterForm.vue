@@ -2,28 +2,21 @@
   <div v-if="getShow">
     <LoginFormTitle class="enter-x" />
     <Form class="p-4 enter-x" :model="formData" :rules="getFormRules" ref="formRef">
-      <FormItem name="account" class="enter-x">
+      <FormItem name="email" class="enter-x">
         <Input
           class="fix-auto-fill"
           size="large"
-          v-model:value="formData.account"
-          :placeholder="t('sys.login.userName')"
+          v-model:value="formData.email"
+          :placeholder="t('sys.login.email')"
         />
       </FormItem>
-      <FormItem name="mobile" class="enter-x">
-        <Input
-          size="large"
-          v-model:value="formData.mobile"
-          :placeholder="t('sys.login.mobile')"
-          class="fix-auto-fill"
-        />
-      </FormItem>
-      <FormItem name="sms" class="enter-x">
+      <FormItem name="code" class="enter-x">
         <CountdownInput
           size="large"
           class="fix-auto-fill"
-          v-model:value="formData.sms"
-          :placeholder="t('sys.login.smsCode')"
+          v-model:value="formData.code"
+          :sendCodeApi="sendCodeApi"
+          :placeholder="t('sys.login.emailCode')"
         />
       </FormItem>
       <FormItem name="password" class="enter-x">
@@ -42,12 +35,12 @@
         />
       </FormItem>
 
-      <FormItem class="enter-x" name="policy">
-        <!-- No logic, you need to deal with it yourself -->
+      <!-- No logic, you need to deal with it yourself -->
+      <!-- <FormItem class="enter-x" name="policy">
         <Checkbox v-model:checked="formData.policy" size="small">
           {{ t('sys.login.policy') }}
         </Checkbox>
-      </FormItem>
+      </FormItem> -->
 
       <Button
         type="primary"
@@ -73,6 +66,9 @@
   import { CountdownInput } from '/@/components/CountDown';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin';
+  import { api_login } from '/@/api';
+  import { useMessage } from '/@/hooks/web/useMessage';
+  const { createMessage } = useMessage();
 
   const FormItem = Form.Item;
   const InputPassword = Input.Password;
@@ -83,12 +79,12 @@
   const loading = ref(false);
 
   const formData = reactive({
-    account: '',
+    email: '',
     password: '',
     confirmPassword: '',
     mobile: '',
-    sms: '',
-    policy: false,
+    code: '',
+    // policy: false,
   });
 
   const { getFormRules } = useFormRules(formData);
@@ -96,9 +92,30 @@
 
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.REGISTER);
 
+  async function sendCodeApi() {
+    const data = await validForm();
+    if (!data) return;
+    await api_login({
+      type: 1,
+      email: data.email,
+      password: data.password,
+    });
+    createMessage.success(t('sys.api.operationSuccess'));
+  }
+
   async function handleRegister() {
     const data = await validForm();
     if (!data) return;
-    console.log(data);
+    if (!data.code) {
+      createMessage.warn(t('sys.api.operationSuccess'));
+      return;
+    }
+    await api_login({
+      type: 1,
+      email: data.email,
+      password: data.password,
+      code: data.code,
+    });
+    createMessage.success(t('sys.api.operationSuccess'));
   }
 </script>
