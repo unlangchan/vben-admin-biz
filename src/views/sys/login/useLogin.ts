@@ -122,12 +122,16 @@ export function useFormRules(formData?: Recordable) {
               trigger: 'change',
             },
           ],
-          code: [
-            {
-              required: true,
-              message: t('sys.login.smsPlaceholder'),
-              trigger: 'change',
-            },
+          // code: [
+          //   {
+          //     required: true,
+          //     message: t('sys.login.smsPlaceholder'),
+          //     trigger: 'change',
+          //   },
+          // ],
+          password: passwordFormRule,
+          confirmPassword: [
+            { validator: validateConfirmPassword(formData?.password), trigger: 'change' },
           ],
         };
 
