@@ -40,7 +40,7 @@
             <ForgetPasswordForm />
             <RegisterForm />
             <MobileForm />
-            <QrCodeForm />
+            <!-- <QrCodeForm /> -->
           </div>
         </div>
       </div>
