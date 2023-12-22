@@ -150,13 +150,6 @@
       } else {
         localStorage.setItem('emailcache', '');
       }
-      await userStore.setToken(userInfo.token);
-      await userStore.afterLoginAction(true);
-      notification.success({
-        message: t('sys.login.loginSuccessTitle'),
-        description: `${t('sys.login.loginSuccessDesc')}`,
-        duration: 3,
-      });
       sessionStorage.setItem(
         'userInfo',
         JSON.stringify({
@@ -174,6 +167,13 @@
           ],
         }),
       );
+      await userStore.setToken(userInfo.token);
+      await userStore.afterLoginAction(true);
+      notification.success({
+        message: t('sys.login.loginSuccessTitle'),
+        description: `${t('sys.login.loginSuccessDesc')}`,
+        duration: 3,
+      });
     } catch (error) {
       // createErrorModal({
       //   title: t('sys.api.errorTip'),
