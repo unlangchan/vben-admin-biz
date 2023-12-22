@@ -1,82 +1,124 @@
 <template>
-  <BasicTable @register="registerTable">
-    <template #form-custom> custom-slot </template>
-    <template #headerTop>
-      <a-alert type="info" show-icon>
-        <template #message>
-          <template v-if="checkedKeys.length > 0">
-            <span>已选中{{ checkedKeys.length }}条记录(可跨页)</span>
-            <a-button type="link" @click="checkedKeys = []" size="small">清空</a-button>
-          </template>
-          <template v-else>
-            <span>未选中任何项目</span>
+  <PageWrapper :title="t('page.page1.title')">
+    <Card>{{ description }}</Card>
+    <Card class="mt-4">
+      <Row>
+        <Col flex="auto">
+          <Mentions
+            v-model:value="formData1.value"
+            autofocus
+            :options="formData1.options"
+            @change="searchHandler1"
+            @select="selectHandler1"
+          />
+        </Col>
+        <Col flex="100px" style="margin-left: 10px">
+          <Button type="primary" @click="save">{{ t('page.save') }}</Button>
+        </Col>
+      </Row>
+      <div class="mt-2">
+        <Tag v-for="(item, key) of formData1.words" :key="key" :color="item.color">{{
+          item.value
+        }}</Tag>
+      </div>
+    </Card>
+    <CollapseContainer :title="t('page.page1.historicalInputQuery')" class="mt-4">
+      <BasicTable @register="registerTable">
+        <template #form-custom> custom-slot </template>
+        <template #headerTop>
+          <a-alert type="info" show-icon>
+            <template #message>
+              <template v-if="checkedKeys.length > 0">
+                <span>{{ t('page.selectedTip', [checkedKeys.length]) }}</span>
+                <a-button type="link" @click="checkedKeys = []" size="small">{{
+                  t('page.clear')
+                }}</a-button>
+              </template>
+              <template v-else>
+                <span>{{ t('page.unSelectedTip') }}</span>
+              </template>
+            </template>
+          </a-alert>
+        </template>
+        <template #form-formFooter>
+          <div class="extendActionBox">
+            <a-button type="danger" @click="getFormValues">{{ t('page.page1.remove') }}</a-button>
+          </div>
+        </template>
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.key === 'action'">
+            <TableAction :actions="[]" />
           </template>
         </template>
-      </a-alert>
-    </template>
-    <template #toolbar>
-      <a-button type="primary" @click="getFormValues">获取表单数据</a-button>
-    </template>
-    <template #form-formFooter>
-      <div class="extendActionBox">
-        <a-button type="primary" @click="getFormValues">新增</a-button>
-        <a-button type="primary" @click="getFormValues">申请删除</a-button>
-        <a-button type="primary" @click="getFormValues">导出EXCEL</a-button>
-        <a-button type="danger" @click="getFormValues">一键校验</a-button>
-      </div>
-    </template>
-    <template #bodyCell="{ column, record }">
-      <template v-if="column.key === 'action'">
-        <TableAction
-          :actions="[
-            {
-              label: '查看',
-              icon: 'ic:outline-library-books',
-              onClick: handleDelete.bind(null, record),
-            },
-            {
-              label: '编辑',
-              icon: 'ic:round-edit-note',
-              onClick: handleDelete.bind(null, record),
-            },
-          ]"
-          :dropDownActions="[
-            {
-              label: '启用',
-              popConfirm: {
-                title: '是否启用？',
-                confirm: handleOpen.bind(null, record),
-              },
-            },
-          ]"
-        />
-      </template>
-    </template>
-  </BasicTable>
+      </BasicTable>
+    </CollapseContainer>
+  </PageWrapper>
 </template>
 <script lang="ts">
   // 示例页
-  import { defineComponent, ref } from 'vue';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getBasicColumns, getFormConfig } from './tableData';
-  import { Alert } from 'ant-design-vue';
+  import { defineComponent, onMounted, reactive, ref } from 'vue';
 
-  import { api_0001 } from '/@/api/index';
-  import { useRouter } from 'vue-router';
-  import { getPageInfo } from '/@/pages/index';
+  import { CollapseContainer } from '/@/components/Container';
+  import { PageWrapper } from '/@/components/Page';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { Alert, Card, Mentions, Tag, Row, Col, Button } from 'ant-design-vue';
+  import { api_content_list, api_description, api_keyword, api_saveContent } from '/@/api';
+
+  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import moment from 'moment';
+  import { useMessage } from '/@/hooks/web/useMessage';
+  const { createMessage } = useMessage();
+
   const { t } = useI18n();
 
   export default defineComponent({
-    components: { BasicTable, AAlert: Alert, TableAction },
+    components: {
+      CollapseContainer,
+      PageWrapper,
+      Card,
+      Mentions,
+      Tag,
+      Row,
+      Col,
+      Button,
+      BasicTable,
+      AAlert: Alert,
+      TableAction,
+    },
     setup() {
-      const { currentRoute } = useRouter();
+      const formData1 = reactive({
+        value: '',
+        options: [],
+        source: [],
+        words: [],
+        keywords: [[], [], []],
+      });
+      const description = ref('');
+      getDescription();
+      getKeyworkd();
+
       const checkedKeys = ref<Array<string | number>>([]);
-      let config = getPageInfo(currentRoute.value.name);
       const [registerTable, { getForm }] = useTable({
-        title: t(currentRoute.value.meta.title),
-        api: api_0001,
+        // title: t('page.page1.historicalInputQuery'),
         useSearchForm: true,
+        scroll: { y: '100%' },
+        beforeFetch: function (params) {
+          let res = {};
+          for (const key in params) {
+            if (Object.prototype.hasOwnProperty.call(params, key)) {
+              const element = params[key];
+              if (element instanceof Array) {
+                if (key === 'time') {
+                  res['startTime'] = element[0];
+                  res['endTime'] = element[1];
+                }
+              } else {
+                res[key] = element;
+              }
+            }
+          }
+          return res;
+        },
         showTableSetting: true,
         tableSetting: { fullScreen: true },
         showIndexColumn: false,
@@ -87,11 +129,137 @@
           onSelect: onSelect,
           onSelectAll: onSelectAll,
         },
-        ...config,
-      });
 
+        api: api_content_list,
+        columns: [
+          {
+            title: 'ID',
+            dataIndex: 'id',
+            fixed: 'left',
+            width: 80,
+          },
+          {
+            title: t('page.page1.colums.content'),
+            dataIndex: 'content',
+            width: 250,
+            align: 'left',
+            sorter: true,
+          },
+          {
+            title: t('page.page1.colums.createTime'),
+            dataIndex: 'createTime',
+            width: 150,
+            sorter: true,
+          },
+        ],
+        // actionColumn: {
+        //   width: 160,
+        //   title: t('page.page1.colums.actionColumn1'),
+        //   dataIndex: 'action',
+        // },
+        useSearchForm: true,
+        searchInfo: {
+          time: [
+            moment().subtract(30, 'd').format('YYYY-MM-DD 00:00:00'),
+            moment().add(1, 'd').format('YYYY-MM-DD 00:00:00'),
+          ],
+        },
+        formConfig: {
+          labelWidth: '12em',
+          schemas: [
+            {
+              field: `searchText`,
+              label: t('page.page1.colums.searchText'),
+              component: 'Input',
+              colProps: {
+                xl: 12,
+                xxl: 8,
+              },
+            },
+            {
+              field: `time`,
+              label: t('page.page1.colums.time'),
+              component: 'RangePicker',
+              componentProps: {
+                showTime: true,
+                valueFormat: 'YYYY-MM-DD HH:mm:ss',
+                defaultValue: [
+                  moment().subtract(30, 'd').format('YYYY-MM-DD 00:00:00'),
+                  moment().add(1, 'd').format('YYYY-MM-DD 00:00:00'),
+                ],
+              },
+              colProps: {
+                xl: 12,
+                xxl: 8,
+              },
+            },
+          ],
+        },
+      });
       function getFormValues() {
         console.log(getForm().getFieldsValue());
+      }
+
+      async function getDescription() {
+        const data = await api_description();
+        description.value = data;
+      }
+      async function getKeyworkd() {
+        const data = await api_keyword();
+        formData1.source = data;
+        formData1.keywords = ['financial_complete', 'financial_content', 'financial_way'].map((key) =>
+          data[key].map((i) => i.keywordName.toLowerCase().trim()),
+        );
+        formData1.options = [].concat(...formData1.keywords).map((i) => {
+          return { label: i, value: i };
+        });
+      }
+      function searchHandler1(value: string) {
+        let str = value.toLowerCase().trim();
+        let words = [];
+        for (let index = 0; index < formData1.keywords.length; index++) {
+          const arr = formData1.keywords[index];
+          let result = [];
+          for (let i = 0; i < arr.length; i++) {
+            const keywordName = arr[i];
+            if (str.indexOf(keywordName) > -1) {
+              if (result.length === 0) {
+                // 首个匹配项
+                result.push({ value: keywordName });
+              } else {
+                for (let j = 0; j < result.length; j++) {
+                  if (keywordName.indexOf(result[j].value) > -1) {
+                    // 当前关键字包含存在的关键字
+                    result[j] = { value: keywordName };
+                  } else if (result[j].value.indexOf(keywordName) > -1) {
+                    // 当前关键字被包含
+                  } else if (j === result.length - 1) {
+                    // 以上条件不成立 但当前关键字不存在关键字列表
+                    result.push({ value: keywordName });
+                  }
+                }
+              }
+            }
+          }
+          if (result.length > 1) {
+            for (let j = 0; j < result.length; j++) {
+              result[j].color = 'error';
+            }
+          }
+          words = words.concat(result);
+        }
+        formData1.words = words;
+      }
+      function selectHandler1(option: OptionProps, prefix: string) {
+        formData1.value = formData1.value.replaceAll('@', '');
+      }
+      async function save() {
+        let res = await api_saveContent({
+          content: formData1.value,
+        });
+        createMessage.success(t('sys.api.operationSuccess'));
+        // 重载
+        getForm().submit();
       }
 
       function onSelect(record, selected) {
@@ -119,6 +287,12 @@
       }
 
       return {
+        t,
+        description,
+        formData1,
+        searchHandler1,
+        selectHandler1,
+        save,
         registerTable,
         getFormValues,
         checkedKeys,
@@ -126,8 +300,12 @@
         onSelectAll,
         handleDelete,
         handleOpen,
-        t,
       };
     },
   });
 </script>
+<style scoped>
+  .ant-card.mt-4 {
+    margin-top: 1rem;
+  }
+</style>

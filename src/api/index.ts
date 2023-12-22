@@ -92,10 +92,13 @@ export const api_modifyLanguage = (params: any) =>
 
 /** 保存内容 */
 export const api_saveContent = (params: any) =>
-  defHttp.post({
-    url: '/biz/saveContent',
-    params,
-    headers: {
-      ignoreCancelToken: true,
+  defHttp.post(
+    {
+      url: `/biz/saveContent?content=${params?.content}`,
+      // params,
+      headers: {
+        ignoreCancelToken: true,
+      },
     },
-  });
+    {},
+  );
