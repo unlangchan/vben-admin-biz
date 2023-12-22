@@ -10,6 +10,10 @@ export default {
     remove: '删除',
     colums: {
       content: '输入内容',
+      amount: '金额',
+      financialComplete: '经济活动是否实现',
+      financialContent: '经济活动内容',
+      financialWay: '经济活动实现方式',
       createTime: '创建时间',
       actionColumn1: '操作',
       searchText: '内容检索',

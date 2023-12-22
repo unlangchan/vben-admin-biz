@@ -39,7 +39,7 @@ export const api_content_list = (inParams: any) => {
   let params = {
     startTime: inParams.startTime,
     endTime: inParams.endTime,
-    currentPage: 10,
+    currentPage: inParams.page,
     pageSize: inParams.pageSize,
   };
   return defHttp
@@ -53,7 +53,7 @@ export const api_content_list = (inParams: any) => {
     .then((data) => {
       return {
         items: data.records,
-        total: data.total,
+        total: Number(data.total),
       };
     });
 };

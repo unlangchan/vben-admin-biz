@@ -8,6 +8,9 @@
             v-model:value="formData1.value"
             autofocus
             :options="formData1.options"
+            :prefix="formData1.prefix"
+            :split="''"
+            :validateSearch="validateSearch"
             @change="searchHandler1"
             @select="selectHandler1"
           />
@@ -67,8 +70,10 @@
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import moment from 'moment';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { useLocale } from '/@/locales/useLocale';
+  import { LOCALE } from '/@/settings/localeSetting';
+  const lang = useLocale().getLocale.value;
   const { createMessage } = useMessage();
-
   const { t } = useI18n();
 
   export default defineComponent({
@@ -90,8 +95,10 @@
         value: '',
         options: [],
         source: [],
+        prefix: [],
         words: [],
         keywords: [[], [], []],
+        _options: [],
       });
       const description = ref('');
       getDescription();
@@ -129,7 +136,6 @@
           onSelect: onSelect,
           onSelectAll: onSelectAll,
         },
-
         api: api_content_list,
         columns: [
           {
@@ -146,9 +152,37 @@
             sorter: true,
           },
           {
+            title: t('page.page1.colums.amount'),
+            dataIndex: 'amount',
+            width: 250,
+            align: 'left',
+            sorter: true,
+          },
+          {
+            title: t('page.page1.colums.financialComplete'),
+            dataIndex: 'financialComplete',
+            width: 150,
+            align: 'left',
+            sorter: true,
+          },
+          {
+            title: t('page.page1.colums.financialContent'),
+            dataIndex: 'financialContent',
+            width: 150,
+            align: 'left',
+            sorter: true,
+          },
+          {
+            title: t('page.page1.colums.financialWay'),
+            dataIndex: 'financialWay',
+            width: 150,
+            align: 'left',
+            sorter: true,
+          },
+          {
             title: t('page.page1.colums.createTime'),
             dataIndex: 'createTime',
-            width: 150,
+            width: 250,
             sorter: true,
           },
         ],
@@ -213,6 +247,34 @@
         formData1.options = [].concat(...formData1.keywords).map((i) => {
           return { label: i, value: i };
         });
+        formData1._options = formData1.options;
+        let words = [].concat(...formData1.keywords);
+        let map1 = new Map();
+        for (let index1 = 0; index1 < words.length; index1++) {
+          const element = words[index1];
+          map1.set(element[0], '');
+        }
+        let wordKeys = Array.from(map1.keys());
+        if (lang === LOCALE.EN_UE) {
+          formData1.prefix = ['@'].concat(
+            wordKeys,
+            wordKeys.map((i: string) => i.toUpperCase()),
+          );
+        } else {
+          formData1.prefix = ['@'].concat(wordKeys);
+        }
+        console.log('formData1.prefix :>> ', formData1.prefix);
+      }
+      function validateSearch(text: string, props: MentionsProps) {
+        let prefix = props.value.slice(-1).toLowerCase();
+        if (prefix === '@') {
+          formData1.options = formData1._options;
+        } else {
+          formData1.options = formData1._options.filter((i) => i.value[0] === prefix);
+        }
+        if (formData1.options.length !== 0) {
+          return true;
+        }
       }
       function searchHandler1(value: string) {
         let str = value.toLowerCase().trim();
@@ -248,10 +310,21 @@
           }
           words = words.concat(result);
         }
+        words = words.concat(
+          (str.match(/\d+(\.\d+)?/g) || []).map((i) => {
+            return {
+              value: i,
+              color: 'blue',
+            };
+          }),
+        );
         formData1.words = words;
+        formData1.options = formData1._options;
       }
       function selectHandler1(option: OptionProps, prefix: string) {
-        formData1.value = formData1.value.replaceAll('@', '');
+        let lastStr = prefix + option.value;
+        let str = formData1.value.slice(0, -lastStr.length);
+        formData1.value = str + lastStr.slice(1);
       }
       async function save() {
         let res = await api_saveContent({
@@ -292,6 +365,7 @@
         formData1,
         searchHandler1,
         selectHandler1,
+        validateSearch,
         save,
         registerTable,
         getFormValues,

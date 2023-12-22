@@ -10,6 +10,10 @@ export default {
     remove: 'Remove',
     colums: {
       content: 'Content',
+      amount: 'Amount',
+      financialComplete: 'FinancialComplete',
+      financialContent: 'FinancialContent',
+      financialWay: 'FinancialWay',
       createTime: 'CreateTime',
       actionColumn1: 'Actions',
       searchText: 'SearchText',
