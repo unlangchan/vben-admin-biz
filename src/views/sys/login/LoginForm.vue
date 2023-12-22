@@ -150,7 +150,7 @@
       } else {
         localStorage.setItem('emailcache', '');
       }
-      sessionStorage.setItem(
+      localStorage.setItem(
         'userInfo',
         JSON.stringify({
           ...userInfo,

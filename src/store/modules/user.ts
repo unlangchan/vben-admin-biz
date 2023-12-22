@@ -16,7 +16,9 @@ import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { isArray } from '/@/utils/is';
 import { h } from 'vue';
-
+import { useLocale } from '/@/locales/useLocale';
+import { LOCALE } from '/@/settings/localeSetting';
+import { api_modifyLanguage } from '/@/api';
 interface UserState {
   userInfo: Nullable<UserInfo>;
   token?: string;
@@ -124,8 +126,11 @@ export const useUserStore = defineStore({
     },
     async getUserInfoAction(): Promise<UserInfo | null> {
       if (!this.getToken) return null;
-      const userInfo: any = JSON.parse(<any>sessionStorage.getItem('userInfo'));
+      const userInfo: any = JSON.parse(<any>localStorage.getItem('userInfo'));
       const { roles = [] } = userInfo;
+      const lang = useLocale().getLocale.value;
+      let language = lang === LOCALE.EN_US ? 'EN_US' : 'ZH_CN';
+      await api_modifyLanguage({ language });
       if (isArray(roles)) {
         const roleList = roles.map((item) => item.value) as RoleEnum[];
         this.setRoleList(roleList);

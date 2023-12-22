@@ -24,8 +24,10 @@
   import { Dropdown } from '/@/components/Dropdown';
   import Icon from '@/components/Icon/Icon.vue';
   import { useLocale } from '/@/locales/useLocale';
-  import { localeList } from '/@/settings/localeSetting';
-
+  import { LOCALE, localeList } from '/@/settings/localeSetting';
+  import { useRoute } from 'vue-router';
+  import { api_modifyLanguage } from '/@/api';
+  const route = useRoute();
   const props = defineProps({
     /**
      * Whether to display text
@@ -56,6 +58,10 @@
   async function toggleLocale(lang: LocaleType | string) {
     await changeLocale(lang as LocaleType);
     selectedKeys.value = [lang as string];
+    if (route.name !== 'Login') {
+      let language = lang === LOCALE.EN_US ? 'EN_US' : 'ZH_CN';
+      await api_modifyLanguage({ language });
+    }
     props.reload && location.reload();
   }
 
