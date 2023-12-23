@@ -1,4 +1,5 @@
 import { defHttp } from '/@/utils/http/axios';
+import { downloadByData } from '/@/utils/file/download';
 
 export const api_0001 = (params: any) =>
   defHttp.get({
@@ -105,3 +106,23 @@ export const api_generator_bill = (params: any) =>
       ignoreCancelToken: true,
     },
   });
+/** 导出 excel */
+export const api_export = (params: any) =>
+  defHttp
+    .get(
+      {
+        url: `/biz/export`,
+        params,
+        responseType: 'blob',
+        headers: {},
+      },
+      {
+        isReturnNativeResponse: true,
+      },
+    )
+    .then((response) => {
+      const ContentDisposition = response.headers['content-disposition'];
+      let filename = ContentDisposition.slice(28);
+      filename = decodeURI(filename);
+      downloadByData(response.data, filename);
+    });
