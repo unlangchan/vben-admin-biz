@@ -4,10 +4,15 @@ export default {
   clear: 'Clear',
   unSelectedTip: 'No project selected',
   selectedTip: '{0} record selected (can be spread across pages)',
+  loading: 'loading...',
   page1: {
     title: 'Accounting',
     historicalInputQuery: 'Historical input query',
+    summaryReport: 'Summary report',
+    income: 'Income',
+    debt: 'Debt',
     remove: 'Remove',
+    export: 'Export',
     colums: {
       content: 'Content',
       amount: 'Amount',
@@ -18,6 +23,10 @@ export default {
       actionColumn1: 'Actions',
       searchText: 'SearchText',
       time: 'CreateTime',
+      tableName: 'TableName for statistics',
+      language: 'Language',
+      fieldName: 'FieldName',
+      count: 'Statistics',
     },
   },
 };

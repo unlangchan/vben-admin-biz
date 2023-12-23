@@ -4,10 +4,15 @@ export default {
   clear: '清空',
   unSelectedTip: '未选中任何项目',
   selectedTip: '已选中{0}条记录(可跨页)',
+  loading: '加载中...',
   page1: {
     title: '记账',
     historicalInputQuery: '历史输入查询',
+    summaryReport: '汇总报表',
+    income: '利润',
+    debt: '债务',
     remove: '删除',
+    export: '导出',
     colums: {
       content: '输入内容',
       amount: '金额',
@@ -18,6 +23,10 @@ export default {
       actionColumn1: '操作',
       searchText: '内容检索',
       time: '数据时间',
+      tableName: '统计的excel表名',
+      language: '语言',
+      fieldName: '字段名',
+      count: '统计个数',
     },
   },
 };

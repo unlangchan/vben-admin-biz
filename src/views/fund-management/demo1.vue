@@ -45,15 +45,13 @@
         </template>
         <template #form-formFooter>
           <div class="extendActionBox">
-            <a-button type="danger" @click="getFormValues">{{ t('page.page1.remove') }}</a-button>
+            <a-button type="danger" @click="handleDelete">{{ t('page.page1.remove') }}</a-button>
           </div>
         </template>
-        <template #bodyCell="{ column, record }">
-          <template v-if="column.key === 'action'">
-            <TableAction :actions="[]" />
-          </template>
-        </template>
       </BasicTable>
+    </CollapseContainer>
+    <CollapseContainer :title="t('page.page1.summaryReport')" class="mt-4">
+      <SummaryReport />
     </CollapseContainer>
   </PageWrapper>
 </template>
@@ -65,9 +63,16 @@
   import { PageWrapper } from '/@/components/Page';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { Alert, Card, Mentions, Tag, Row, Col, Button } from 'ant-design-vue';
-  import { api_content_list, api_description, api_keyword, api_saveContent } from '/@/api';
+  import {
+    api_content_delete,
+    api_content_list,
+    api_description,
+    api_keyword,
+    api_saveContent,
+  } from '/@/api';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import SummaryReport from './components/summaryReport.vue';
   import moment from 'moment';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useLocale } from '/@/locales/useLocale';
@@ -89,6 +94,7 @@
       BasicTable,
       AAlert: Alert,
       TableAction,
+      SummaryReport,
     },
     setup() {
       const formData1 = reactive({
@@ -103,7 +109,7 @@
       const description = ref('');
       getDescription();
       getKeyworkd();
-
+      /** Historical input query S */
       const checkedKeys = ref<Array<string | number>>([]);
       const [registerTable, { getForm }] = useTable({
         // title: t('page.page1.historicalInputQuery'),
@@ -186,20 +192,14 @@
             sorter: true,
           },
         ],
-        // actionColumn: {
-        //   width: 160,
-        //   title: t('page.page1.colums.actionColumn1'),
-        //   dataIndex: 'action',
-        // },
-        useSearchForm: true,
-        searchInfo: {
-          time: [
-            moment().subtract(30, 'd').format('YYYY-MM-DD 00:00:00'),
-            moment().add(1, 'd').format('YYYY-MM-DD 00:00:00'),
-          ],
-        },
         formConfig: {
           labelWidth: '12em',
+          model: {
+            time: [
+              moment().subtract(30, 'd').format('YYYY-MM-DD 00:00:00'),
+              moment().add(1, 'd').format('YYYY-MM-DD 00:00:00'),
+            ],
+          },
           schemas: [
             {
               field: `searchText`,
@@ -230,10 +230,39 @@
           ],
         },
       });
-      function getFormValues() {
-        console.log(getForm().getFieldsValue());
+      function onSelect(record, selected) {
+        if (selected) {
+          checkedKeys.value = [...checkedKeys.value, record.id];
+        } else {
+          checkedKeys.value = checkedKeys.value.filter((id) => id !== record.id);
+        }
       }
-
+      function onSelectAll(selected, selectedRows, changeRows) {
+        const changeIds = changeRows.map((item) => item.id);
+        if (selected) {
+          checkedKeys.value = [...checkedKeys.value, ...changeIds];
+        } else {
+          checkedKeys.value = checkedKeys.value.filter((id) => {
+            return !changeIds.includes(id);
+          });
+        }
+      }
+      async function handleDelete() {
+        let ids = checkedKeys.value;
+        if (ids.length === 0) {
+          createMessage.warn(t('sys.api.operationWarn1'));
+          return;
+        }
+        await api_content_delete(ids);
+        checkedKeys.value = [];
+        createMessage.success(t('sys.api.operationSuccess'));
+        // reload
+        getForm().submit();
+      }
+      /** Historical input query E */
+      /** Summary reporty S */
+      /** Summary report E */
+      // Other
       async function getDescription() {
         const data = await api_description();
         description.value = data;
@@ -263,7 +292,6 @@
         } else {
           formData1.prefix = ['@'].concat(wordKeys);
         }
-        console.log('formData1.prefix :>> ', formData1.prefix);
       }
       function validateSearch(text: string, props: MentionsProps) {
         let prefix = props.value.slice(-1).toLowerCase();
@@ -331,32 +359,8 @@
           content: formData1.value,
         });
         createMessage.success(t('sys.api.operationSuccess'));
-        // 重载
+        // reload
         getForm().submit();
-      }
-
-      function onSelect(record, selected) {
-        if (selected) {
-          checkedKeys.value = [...checkedKeys.value, record.id];
-        } else {
-          checkedKeys.value = checkedKeys.value.filter((id) => id !== record.id);
-        }
-      }
-      function onSelectAll(selected, selectedRows, changeRows) {
-        const changeIds = changeRows.map((item) => item.id);
-        if (selected) {
-          checkedKeys.value = [...checkedKeys.value, ...changeIds];
-        } else {
-          checkedKeys.value = checkedKeys.value.filter((id) => {
-            return !changeIds.includes(id);
-          });
-        }
-      }
-      function handleDelete(record: Recordable) {
-        console.log('点击了删除', record);
-      }
-      function handleOpen(record: Recordable) {
-        console.log('点击了启用', record);
       }
 
       return {
@@ -367,13 +371,13 @@
         selectHandler1,
         validateSearch,
         save,
+        /** Historical input query S */
         registerTable,
-        getFormValues,
         checkedKeys,
         onSelect,
         onSelectAll,
         handleDelete,
-        handleOpen,
+        /** Historical input query E */
       };
     },
   });

@@ -2,6 +2,7 @@ export default {
   api: {
     operationSuccess: '操作成功',
     operationFailed: '操作失败',
+    operationWarn1: '请选择至少1条数据！',
     errorTip: '错误提示',
     successTip: '成功提示',
     errorMessage: '操作失败,系统异常!',

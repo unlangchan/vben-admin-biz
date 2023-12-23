@@ -2,6 +2,7 @@ export default {
   api: {
     operationSuccess: 'Operation Success',
     operationFailed: 'Operation failed',
+    operationWarn1: 'Please select at least 1 piece of data!',
     errorTip: 'Error Tip',
     successTip: 'Success Tip',
     errorMessage: 'The operation failed, the system is abnormal!',

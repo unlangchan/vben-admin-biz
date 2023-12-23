@@ -79,26 +79,29 @@ export const api_keyword = (params: any) =>
   });
 /** 修改用户语言 */
 export const api_modifyLanguage = (params: any) =>
-  defHttp.post(
-    {
-      url: `/biz/modifyLanguage?language=${params?.language}`,
-      // params,
-      headers: {
-        ignoreCancelToken: true,
-      },
+  defHttp.post({
+    url: `/biz/modifyLanguage?language=${params?.language}`,
+    // params,
+    headers: {
+      ignoreCancelToken: true,
     },
-    {},
-  );
+  });
 
 /** 保存内容 */
 export const api_saveContent = (params: any) =>
-  defHttp.post(
-    {
-      url: `/biz/saveContent?content=${params?.content}`,
-      // params,
-      headers: {
-        ignoreCancelToken: true,
-      },
+  defHttp.post({
+    url: `/biz/saveContent?content=${params?.content}`,
+    // params,
+    headers: {
+      ignoreCancelToken: true,
     },
-    {},
-  );
+  });
+/** 生成报表 关键 */
+export const api_generator_bill = (params: any) =>
+  defHttp.post({
+    url: `/biz/generator/bill`,
+    params,
+    headers: {
+      ignoreCancelToken: true,
+    },
+  });
