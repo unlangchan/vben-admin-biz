@@ -9,8 +9,8 @@ export default {
     title: 'Accounting',
     historicalInputQuery: 'Historical input query',
     summaryReport: 'Summary report',
-    income: 'Income',
-    debt: 'Debt',
+    income: 'Income sheet',
+    debt: 'Balance sheet',
     remove: 'Remove',
     export: 'Export',
     colums: {

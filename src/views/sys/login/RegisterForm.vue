@@ -121,5 +121,6 @@
     formData.confirmPassword = '';
     formData.code = '';
     createMessage.success(t('sys.api.operationSuccess'));
+    handleBackLogin();
   }
 </script>

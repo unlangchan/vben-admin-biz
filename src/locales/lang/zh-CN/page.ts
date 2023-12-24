@@ -9,8 +9,8 @@ export default {
     title: '记账',
     historicalInputQuery: '历史输入查询',
     summaryReport: '汇总报表',
-    income: '利润',
-    debt: '债务',
+    income: '利润表',
+    debt: '资产负债表',
     remove: '删除',
     export: '导出',
     colums: {

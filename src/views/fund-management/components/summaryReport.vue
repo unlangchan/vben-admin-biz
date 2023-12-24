@@ -1,24 +1,27 @@
 <template>
-  <BasicTable @register="registerTable">
-    <template #form-custom> custom-slot </template>
-    <template #form-advanceAfter>
-      <!-- <div class="extendActionBox"> -->
-        <a-button type="primary" @click="handleExport">{{ t('page.page1.export') }}</a-button>
-      <!-- </div> -->
+  <BasicForm ref="formRef" submitOnReset @register="registerForm" @submit="handleSearchInfoChange">
+    <template #advanceAfter>
+      <a-button type="primary" @click="handleExport">{{ t('page.page1.export') }}</a-button>
     </template>
-  </BasicTable>
-  <BasicTable @register="registerTable1">
-    <template #form-custom> custom-slot </template>
-  </BasicTable>
+  </BasicForm>
+  <Row>
+    <Col :span="12">
+      <BasicTable @register="registerTable"> </BasicTable>
+    </Col>
+    <Col :span="12">
+      <BasicTable @register="registerTable1"> </BasicTable>
+    </Col>
+  </Row>
 </template>
 <script lang="ts">
-  import { defineComponent, onMounted, reactive, ref } from 'vue';
+  import { defineComponent, onMounted, reactive, ref, unref } from 'vue';
 
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { Alert } from 'ant-design-vue';
+  import { Alert, Row, Col } from 'ant-design-vue';
   import { api_content_delete, api_content_list, api_export, api_generator_bill } from '/@/api';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicForm, useForm } from '/@/components/Form/index';
   import moment from 'moment';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { Loading, useLoading } from '/@/components/Loading';
@@ -27,8 +30,11 @@
 
   export default defineComponent({
     components: {
+      BasicForm,
       BasicTable,
       AAlert: Alert,
+      Row,
+      Col,
       TableAction,
     },
     setup() {
@@ -44,47 +50,64 @@
       const [openFullLoading, closeFullLoading] = useLoading({
         tip: t('page.loadding'),
       });
+      const formRef = ref(null);
+      const columns = ref<Array<any>>([
+        {
+          title: 'Label',
+          dataIndex: 'label',
+          width: 250,
+          align: 'right',
+        },
+        {
+          title: 'Value',
+          dataIndex: 'value',
+          width: 250,
+          align: 'left',
+        },
+      ]);
+      const [registerForm] = useForm({
+        actionColOptions: {
+          xl: 12,
+          xxl: 8,
+        },
+        labelWidth: '12em',
 
-      const columns = ref<Array<any>>([]);
-      const columns1 = ref<Array<any>>([]);
-      const [registerTable, { getForm, setTableData }] = useTable({
-        title: t('page.page1.income'),
-        useSearchForm: true,
-        scroll: { y: 'auto' },
-        handleSearchInfoFn,
-        showTableSetting: true,
-        showIndexColumn: false,
-        dataSource: [],
-        pagination: false,
-        columns,
-        formConfig: {
-          labelWidth: '12em',
-          model: {
-            time: [
-              moment().subtract(30, 'd').format('YYYY-MM-DD 00:00:00'),
-              moment().add(1, 'd').format('YYYY-MM-DD 00:00:00'),
-            ],
-          },
-          schemas: [
-            {
-              field: `time`,
-              label: t('page.page1.colums.time'),
-              component: 'RangePicker',
-              componentProps: {
-                showTime: true,
-                valueFormat: 'YYYY-MM-DD HH:mm:ss',
-                defaultValue: [
-                  moment().subtract(30, 'd').format('YYYY-MM-DD 00:00:00'),
-                  moment().add(1, 'd').format('YYYY-MM-DD 00:00:00'),
-                ],
-              },
-              colProps: {
-                xl: 12,
-                xxl: 8,
-              },
-            },
+        model: {
+          time: [
+            moment().subtract(30, 'd').format('YYYY-MM-DD 00:00:00'),
+            moment().add(1, 'd').format('YYYY-MM-DD 00:00:00'),
           ],
         },
+        schemas: [
+          {
+            field: `time`,
+            label: t('page.page1.colums.time'),
+            component: 'RangePicker',
+            componentProps: {
+              showTime: true,
+              valueFormat: 'YYYY-MM-DD HH:mm:ss',
+              defaultValue: [
+                moment().subtract(30, 'd').format('YYYY-MM-DD 00:00:00'),
+                moment().add(1, 'd').format('YYYY-MM-DD 00:00:00'),
+              ],
+            },
+            colProps: {
+              xl: 12,
+              xxl: 8,
+            },
+          },
+        ],
+      });
+      const [registerTable, { setTableData }] = useTable({
+        title: t('page.page1.income'),
+        useSearchForm: false,
+        scroll: { y: 'auto' },
+        showTableSetting: true,
+        showIndexColumn: false,
+        showHeader: false,
+        columns: columns,
+        dataSource: [],
+        pagination: false,
         tableSetting: {
           redo: false,
           size: false,
@@ -93,7 +116,7 @@
         },
       });
       async function handleExport() {
-        let params = getForm().getFieldsValue();
+        let params = unref(formRef).getFieldsValue();
         try {
           let outParams = {};
           for (const key in params) {
@@ -119,9 +142,10 @@
         scroll: { y: 'auto' },
         showTableSetting: true,
         showIndexColumn: false,
+        showHeader: false,
+        columns: columns,
         dataSource: [],
         pagination: false,
-        columns: columns1,
         tableSetting: {
           redo: false,
           size: false,
@@ -132,61 +156,41 @@
 
       async function handleSearchInfoFn(params) {
         openFullLoading();
-        // try {
-        let outParams = {};
-        for (const key in params) {
-          if (Object.prototype.hasOwnProperty.call(params, key)) {
-            const element = params[key];
-            if (element instanceof Array) {
-              if (key === 'time') {
-                outParams['startTime'] = element[0];
-                outParams['endTime'] = element[1];
+        try {
+          let outParams = {};
+          for (const key in params) {
+            if (Object.prototype.hasOwnProperty.call(params, key)) {
+              const element = params[key];
+              if (element instanceof Array) {
+                if (key === 'time') {
+                  outParams['startTime'] = element[0];
+                  outParams['endTime'] = element[1];
+                }
+              } else {
+                outParams[key] = element;
               }
-            } else {
-              outParams[key] = element;
             }
           }
-        }
-        let data = await api_generator_bill(outParams);
-        let dataSource = [{}],
-          dataSource1 = [{}],
-          columnValues = [],
-          columnValues1 = [];
-        data.pl.forEach((item, index) => {
-          let key = 'fieldName_' + index;
-          columnValues.push({
-            title: item.fieldName,
-            dataIndex: key,
-            width: 250,
+          let data = await api_generator_bill(outParams);
+          let dataSource = [],
+            dataSource1 = [],
+            columnValues = [],
+            columnValues1 = [];
+          data.pl.forEach((item, index) => {
+            dataSource.push({
+              label: item.fieldName,
+              value: item.amount,
+            });
           });
-          dataSource[0][key] = item.amount;
-        });
-        data.bs.forEach((item, index) => {
-          let key = 'fieldName_' + index;
-          columnValues1.push({
-            title: item.fieldName,
-            dataIndex: key,
-            width: 250,
+          data.bs.forEach((item, index) => {
+            dataSource1.push({
+              label: item.fieldName,
+              value: item.amount,
+            });
           });
-          dataSource1[0][key] = item.amount;
-        });
-        columns.value = columnValues;
-        columns1.value = columnValues1;
-        if (columns.value.length < 5) {
-          columns.value.push({
-            title: '',
-            dataIndex: 'empty',
-          });
-        }
-        if (columns1.value.length < 5) {
-          columns1.value.push({
-            title: '',
-            dataIndex: 'empty',
-          });
-        }
-        setTableData(dataSource);
-        setTableData1(dataSource1);
-        // } catch (error) {}
+          setTableData(dataSource);
+          setTableData1(dataSource1);
+        } catch (error) {}
         closeFullLoading();
       }
       return {
@@ -194,6 +198,9 @@
         registerTable,
         handleExport,
         registerTable1,
+        registerForm,
+        handleSearchInfoChange: handleSearchInfoFn,
+        formRef,
       };
     },
   });

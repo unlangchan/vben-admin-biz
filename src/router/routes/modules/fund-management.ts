@@ -27,24 +27,23 @@ function createRoute(menus: Array<any>) {
 }
 
 const permission: AppRouteModule = {
-  path: '/fund-management',
-  name: 'FundManagement',
+  path: '/accounting',
+  name: 'Accounting',
   component: LAYOUT,
-  redirect: '/fund-management/bank-account',
+  redirect: '/accounting/index',
   meta: {
-    orderNo: 15,
-    icon: 'material-symbols:paid-outline-rounded',
-    title: t('page.moduleTitle1'),
+    hideChildrenInMenu: true,
+    title: t('page.page1.title'),
   },
   children: [
     {
-      path: 'demo1',
-      name: 'Demo1',
+      path: 'index',
+      name: 'AccountingPage',
       meta: {
         icon: 'material-symbols:currency-exchange',
         title: t('page.page1.title'),
       },
-      component: () => import('/@/views/fund-management/demo1.vue'),
+      component: () => import('/@/views/fund-management/accounting.vue'),
     },
     ...createRoute(FundManagementMenuList),
   ],

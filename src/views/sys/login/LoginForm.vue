@@ -158,7 +158,7 @@
           username: userInfo.userName,
           realName: userInfo.userName,
           desc: userInfo.description,
-          homePath: '/fund-management/demo1',
+          homePath: '/accounting/index',
           roles: [
             {
               roleName: 'Super Admin',
