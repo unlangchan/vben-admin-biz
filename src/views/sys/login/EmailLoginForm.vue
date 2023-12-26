@@ -88,7 +88,7 @@
   </Form>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref, unref, computed } from 'vue';
+  import { reactive, ref, unref, computed, watch } from 'vue';
 
   import { Checkbox, Form, Input, Row, Col, Button, Divider } from 'ant-design-vue';
   import {
@@ -125,13 +125,29 @@
 
   const formRef = ref();
   const loading = ref(false);
-  const rememberMe = ref(true);
+  const rememberMe = ref(false);
 
   const formData = reactive({
-    email: localStorage.getItem('emailcache') || '',
+    email: '',
     code: '',
   });
-
+  const emailcache = localStorage.getItem('emailcache') || '';
+  if (emailcache !== '') {
+    formData.email = emailcache;
+    rememberMe.value = true;
+  } else {
+    rememberMe.value = false;
+  }
+  watch(
+    () => rememberMe.value,
+    (v: boolean) => {
+      if (v) {
+        localStorage.setItem('emailcache', formData.email);
+      } else {
+        localStorage.removeItem('emailcache');
+      }
+    },
+  );
   const { validForm } = useFormValid(formRef);
 
   //onKeyStroke('Enter', handleLogin);
