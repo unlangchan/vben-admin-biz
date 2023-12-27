@@ -386,4 +386,7 @@
   .ant-card.mt-4 {
     margin-top: 1rem;
   }
+  .ant-mentions {
+    border-color: #4096ff;
+  }
 </style>

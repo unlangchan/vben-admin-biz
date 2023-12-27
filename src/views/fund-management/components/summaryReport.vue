@@ -6,10 +6,10 @@
   </BasicForm>
   <Row>
     <Col :span="12">
-      <BasicTable @register="registerTable"> </BasicTable>
+      <BasicTable @register="registerTable1"> </BasicTable>
     </Col>
     <Col :span="12">
-      <BasicTable @register="registerTable1"> </BasicTable>
+      <BasicTable @register="registerTable"> </BasicTable>
     </Col>
   </Row>
 </template>
