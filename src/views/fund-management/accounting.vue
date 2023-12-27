@@ -1,6 +1,6 @@
 <template>
   <PageWrapper :title="t('page.page1.title')">
-    <Card>{{ description }}</Card>
+    <Card><span v-bind:innerHTML="description"></span></Card>
     <Card class="mt-4">
       <Row>
         <Col flex="auto">
