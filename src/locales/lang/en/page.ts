@@ -1,5 +1,6 @@
 export default {
   moduleTitle1: 'FundManagement',
+  moduleTitle2: 'Configuration',
   save: 'Save',
   clear: 'Clear',
   unSelectedTip: 'No project selected',
@@ -28,5 +29,11 @@ export default {
       fieldName: 'FieldName',
       count: 'Statistics',
     },
+  },
+  page2: {
+    title: 'excel配置展示',
+  },
+  page3: {
+    title: '关键字配置展示',
   },
 };

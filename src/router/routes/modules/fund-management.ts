@@ -1,7 +1,6 @@
 import type { AppRouteModule } from '/@/router/types';
 
 import { getParentLayout, LAYOUT } from '/@/router/constant';
-import { RoleEnum } from '/@/enums/roleEnum';
 import { t } from '/@/hooks/web/useI18n';
 import { FundManagementMenuList } from '/@/pages/menu';
 
@@ -32,8 +31,10 @@ const permission: AppRouteModule = {
   component: LAYOUT,
   redirect: '/accounting/index',
   meta: {
-    hideChildrenInMenu: true,
     title: t('page.page1.title'),
+    icon: 'material-symbols:currency-exchange',
+    hideChildrenInMenu: true,
+    orderNo: 1,
   },
   children: [
     {

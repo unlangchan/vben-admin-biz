@@ -14,7 +14,7 @@ const routeModuleList: AppRouteModule[] = [];
 Object.keys(modules).forEach((key) => {
   const mod = (modules as Recordable)[key].default || {};
   const modList = Array.isArray(mod) ? [...mod] : [mod];
-  if (key.indexOf('fund-management') === -1) {
+  if (key.indexOf('fund-management') === -1 && key.indexOf('config') === -1) {
     return;
   }
   routeModuleList.push(...modList);

@@ -1,5 +1,6 @@
 export default {
   moduleTitle1: '资金管理',
+  moduleTitle2: '配置项',
   save: '保存',
   clear: '清空',
   unSelectedTip: '未选中任何项目',
@@ -28,5 +29,11 @@ export default {
       fieldName: '字段名',
       count: '统计个数',
     },
+  },
+  page2: {
+    title: 'excel配置展示',
+  },
+  page3: {
+    title: '关键字配置展示',
   },
 };

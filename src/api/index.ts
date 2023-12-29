@@ -126,3 +126,36 @@ export const api_export = (params: any) =>
       filename = decodeURI(filename);
       downloadByData(response.data, filename);
     });
+
+/** excel配置展示 */
+export const api_excel_configList = (params: any) =>
+  defHttp
+    .get({
+      url: `/biz/excel/configList`,
+      params,
+      headers: {
+        ignoreCancelToken: true,
+      },
+    })
+    .then((data) => {
+      return {
+        items: data,
+        total: Number(data.length),
+      };
+    });
+/** 关键字配置展示 */
+export const api_keyword_configList = (params: any) =>
+  defHttp
+    .get({
+      url: `/biz/keyword/configList`,
+      params,
+      headers: {
+        ignoreCancelToken: true,
+      },
+    })
+    .then((data) => {
+      return {
+        items: data,
+        total: Number(data.length),
+      };
+    });
