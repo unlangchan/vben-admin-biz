@@ -177,12 +177,7 @@
           realName: userInfo.userName,
           desc: userInfo.description,
           homePath: '/accounting/index',
-          roles: [
-            {
-              roleName: 'Super Admin',
-              value: 'super',
-            },
-          ],
+          roles: [{ roleName: userInfo.roleName, value: userInfo.roleName }],
         }),
       );
       await userStore.setToken(userInfo.token);
