@@ -14,6 +14,7 @@ export default {
     debt: 'Balance sheet',
     remove: 'Remove',
     export: 'Export',
+    searchTextPlaceholder: 'Please input your sentences',
     colums: {
       content: 'Content',
       amount: 'Amount',

@@ -195,6 +195,7 @@
         formConfig: {
           labelWidth: '12em',
           model: {
+            searchText: '',
             time: [
               moment().subtract(30, 'd').format('YYYY-MM-DD 00:00:00'),
               moment().add(1, 'd').format('YYYY-MM-DD 00:00:00'),
@@ -208,6 +209,9 @@
               colProps: {
                 xl: 12,
                 xxl: 8,
+              },
+              componentProps: {
+                placeholder: t('page.page1.searchTextPlaceholder'),
               },
             },
             {

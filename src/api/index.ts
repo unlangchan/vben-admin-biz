@@ -42,6 +42,7 @@ export const api_content_list = (inParams: any) => {
     endTime: inParams.endTime,
     currentPage: inParams.page,
     pageSize: inParams.pageSize,
+    searchText: inParams.searchText,
   };
   return defHttp
     .get({
