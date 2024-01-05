@@ -108,7 +108,7 @@
       });
       const description = ref('');
       getDescription();
-      getKeyworkd();
+      getkeyword();
       /** Historical input query S */
       const checkedKeys = ref<Array<string | number>>([]);
       const [registerTable, { getForm }] = useTable({
@@ -271,7 +271,7 @@
         const data = await api_description();
         description.value = data;
       }
-      async function getKeyworkd() {
+      async function getkeyword() {
         const data = await api_keyword();
         formData1.source = data;
         formData1.keywords = ['financial_complete', 'financial_content', 'financial_way'].map((key) =>
@@ -299,8 +299,12 @@
       }
       function validateSearch(text: string, props: MentionsProps) {
         let prefix = props.value.slice(-1).toLowerCase();
+        let keywordIndex = props.value.indexOf('@');
         if (prefix === '@') {
           formData1.options = formData1._options;
+        } else if (keywordIndex > -1) {
+          prefix = props.value.slice(keywordIndex + 1, keywordIndex + 2);
+          formData1.options = formData1._options.filter((i) => i.value[0] === prefix);
         } else {
           formData1.options = formData1._options.filter((i) => i.value[0] === prefix);
         }
@@ -355,6 +359,12 @@
       }
       function selectHandler1(option: OptionProps, prefix: string) {
         let lastStr = prefix + option.value;
+        let keywordIndex = formData1.value.indexOf('@');
+        if (keywordIndex > -1) {
+          console.log('keywordIndex :>> ', keywordIndex);
+          formData1.value = formData1.value.replace(/(@.*)/gi, option.value);
+          return;
+        }
         let str = formData1.value.slice(0, -lastStr.length);
         formData1.value = str + lastStr.slice(1);
       }
