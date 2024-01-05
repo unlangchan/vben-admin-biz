@@ -11,6 +11,7 @@
             :prefix="formData1.prefix"
             :split="''"
             :validateSearch="validateSearch"
+            :placeholder="t('page.page1.mentionsPlaceholder')"
             @change="searchHandler1"
             @select="selectHandler1"
           />

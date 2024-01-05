@@ -14,7 +14,8 @@ export default {
     debt: '资产负债表',
     remove: '删除',
     export: '导出',
-    searchTextPlaceholder: '请输入语句',
+    mentionsPlaceholder: '请输入语句',
+    searchTextPlaceholder: '请输入',
     colums: {
       content: '输入内容',
       amount: '金额',
