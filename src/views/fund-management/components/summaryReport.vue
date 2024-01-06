@@ -5,10 +5,10 @@
     </template>
   </BasicForm>
   <Row>
-    <Col :span="12">
+    <Col :span="12" :xl="12" :xs="24">
       <BasicTable @register="registerTable1"> </BasicTable>
     </Col>
-    <Col :span="12">
+    <Col :span="12" :xl="12" :xs="24">
       <BasicTable @register="registerTable"> </BasicTable>
     </Col>
   </Row>
@@ -55,23 +55,23 @@
         {
           title: 'Label',
           dataIndex: 'label',
-          width: 250,
+          width: '50%',
           align: 'right',
         },
         {
           title: 'Value',
           dataIndex: 'value',
-          width: 250,
+          width: '50%',
           align: 'left',
         },
       ]);
       const [registerForm] = useForm({
         actionColOptions: {
+          span: 24,
           xl: 12,
           xxl: 8,
         },
         labelWidth: '12em',
-
         model: {
           time: [
             moment().subtract(30, 'd').format('YYYY-MM-DD 00:00:00'),

@@ -404,4 +404,7 @@
   .ant-mentions {
     border-color: #4096ff;
   }
+  :global(.ant-mentions > textarea::placeholder) {
+    color: #ffca28;
+  }
 </style>

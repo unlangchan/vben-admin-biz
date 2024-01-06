@@ -50,6 +50,7 @@
       });
       const [registerForm] = useForm({
         actionColOptions: {
+          span: 24,
           xl: 24,
           xxl: 24,
         },
