@@ -48,7 +48,7 @@
       });
 
       const [openFullLoading, closeFullLoading] = useLoading({
-        tip: t('page.loadding'),
+        tip: t('page.loading'),
       });
       const formRef = ref(null);
       const columns = ref<Array<any>>([

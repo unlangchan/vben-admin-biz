@@ -46,7 +46,7 @@
       });
 
       const [openFullLoading, closeFullLoading] = useLoading({
-        tip: t('page.loadding'),
+        tip: t('page.loading'),
       });
       const [registerForm] = useForm({
         actionColOptions: {
