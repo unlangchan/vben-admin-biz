@@ -20,7 +20,7 @@ const config: AppRouteModule = {
         title: t('page.page2.title'),
         roles: [RoleEnum.SUPER],
       },
-      component: () => import('/@/views/fund-management/excelConfig.vue'),
+      component: () => import('@/views/configs/excelConfig.vue'),
     },
     {
       path: 'keywordConfig',
@@ -29,7 +29,7 @@ const config: AppRouteModule = {
         title: t('page.page3.title'),
         roles: [RoleEnum.SUPER],
       },
-      component: () => import('/@/views/fund-management/keywordConfig.vue'),
+      component: () => import('@/views/configs/keywordConfig.vue'),
     },
     {
       path: 'staffAndCompany',
@@ -38,7 +38,7 @@ const config: AppRouteModule = {
         title: t('page.page5.title'),
         roles: [RoleEnum.SUPER],
       },
-      component: () => import('/@/views/fund-management/staffAndCompany.vue'),
+      component: () => import('@/views/configs/staffAndCompany.vue'),
     },
   ],
 };
