@@ -34,8 +34,8 @@
           :placeholder="t('sys.login.confirmPassword')"
         />
       </FormItem>
-       <FormItem name="company" class="enter-x">
-         <Input
+      <FormItem name="company" class="enter-x">
+        <Input
           class="fix-auto-fill"
           size="large"
           v-model:value="formData.company"
@@ -108,7 +108,6 @@
       type: 1,
       email: data.email,
       password: data.password,
-      company: data.company,
     });
     createMessage.success(t('sys.api.operationSuccess'));
   }
@@ -117,7 +116,7 @@
     const data = await validForm();
     if (!data) return;
     if (!data.code) {
-      createMessage.warn(t('sys.api.operationSuccess'));
+      createMessage.warn(t('sys.login.smsPlaceholder'));
       return;
     }
     await api_login({
@@ -125,6 +124,7 @@
       email: data.email,
       password: data.password,
       code: data.code,
+      company: data.company,
     });
     formData.email = '';
     formData.password = '';
