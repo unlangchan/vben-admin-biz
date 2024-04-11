@@ -1,5 +1,6 @@
 import { defHttp } from '/@/utils/http/axios';
 import { downloadByData } from '/@/utils/file/download';
+import { ContentTypeEnum } from '../enums/httpEnum';
 
 export const api_0001 = (params: any) =>
   defHttp.get({
@@ -159,6 +160,33 @@ export const api_keyword_configList = (params: any) =>
         items: data,
         total: Number(data.length),
       };
+    });
+/** 分页查询 分录list */
+export const api_entry_content_list = (params: any) =>
+  defHttp
+    .get({
+      url: `/entry/content/list`,
+      params,
+      headers: {
+        ignoreCancelToken: true,
+      },
+    })
+    .then((data) => {
+      return {
+        items: data.records,
+        total: Number(data.total),
+      };
+    });
+/** 保存文本 生成分录 */
+export const api_entry_parse = (params: any) =>
+  defHttp
+    .post({
+      url: `/entry/parse`,
+      params,
+      headers: {
+        ignoreCancelToken: true,
+        'Content-type': ContentTypeEnum.FORM_DATA,
+      },
     });
 /** 分页查询 供应商与员工 */
 export const api_entry_dict_list = (params: any) =>

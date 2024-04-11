@@ -38,6 +38,18 @@ export default {
   page3: {
     title: '关键字配置展示',
   },
+  page4: {
+    title: 'Financial transactions',
+    textareaPlaceholder: '请输入内容',
+    colums: {
+      content: 'Content',
+      currency: 'Currency',
+      transactionTime: 'TransactionTime',
+      createBy: 'CreateBy',
+      createTime: 'CreateTime',
+      result: 'Result',
+    },
+  },
   page5: {
     title: 'Staff and company',
     import: '导入',
