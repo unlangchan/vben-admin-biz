@@ -40,7 +40,7 @@ export default {
     fireVueError: '点击触发vue错误',
     fireResourceError: '点击触发资源加载错误',
     fireAjaxError: '点击触发ajax错误',
-
+    
     enableMessage: '只在`/src/settings/projectSetting.ts` 内的useErrorHandle=true时生效.',
   },
   exception: {
@@ -93,6 +93,7 @@ export default {
     policyPlaceholder: '勾选后才能注册',
     diffPwd: '两次输入密码不一致',
     emailPlaceholder: '不是有效的电子邮件！',
+    companyPlaceholder: '请输入公司名称',
 
     userName: '账号',
     password: '密码',
@@ -102,5 +103,6 @@ export default {
     emailCode: '邮箱验证码',
     smsCode: '短信验证码',
     mobile: '手机号码',
+    company: '公司名称',
   },
 };

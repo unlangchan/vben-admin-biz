@@ -160,3 +160,29 @@ export const api_keyword_configList = (params: any) =>
         total: Number(data.length),
       };
     });
+/** 分页查询 供应商与员工 */
+export const api_entry_dict_list = (params: any) =>
+  defHttp
+    .get({
+      url: `/entry/dict/list`,
+      params,
+      headers: {
+        ignoreCancelToken: true,
+      },
+    })
+    .then((data) => {
+      return {
+        items: data.records,
+        total: Number(data.total),
+      };
+    });
+/** 导入供应商员工 */
+export const api_entry_newStoreInput = (params: any) =>
+  defHttp
+    .uploadFile({
+      baseURL: '/api',
+      url: `/entry/newStoreInput`,
+      headers: {
+        ignoreCancelToken: true,
+      },
+    }, params);

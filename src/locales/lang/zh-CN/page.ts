@@ -38,4 +38,8 @@ export default {
   page3: {
     title: '关键字配置展示',
   },
+  page5: {
+    title: 'Staff and company',
+    import: '导入',
+  },
 };

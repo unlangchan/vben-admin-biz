@@ -34,6 +34,14 @@
           :placeholder="t('sys.login.confirmPassword')"
         />
       </FormItem>
+       <FormItem name="company" class="enter-x">
+         <Input
+          class="fix-auto-fill"
+          size="large"
+          v-model:value="formData.company"
+          :placeholder="t('sys.login.company')"
+        />
+      </FormItem>
 
       <!-- No logic, you need to deal with it yourself -->
       <!-- <FormItem class="enter-x" name="policy">
@@ -84,6 +92,7 @@
     confirmPassword: '',
     mobile: '',
     code: '',
+    company: '',
     // policy: false,
   });
 
@@ -99,6 +108,7 @@
       type: 1,
       email: data.email,
       password: data.password,
+      company: data.company,
     });
     createMessage.success(t('sys.api.operationSuccess'));
   }
@@ -120,6 +130,7 @@
     formData.password = '';
     formData.confirmPassword = '';
     formData.code = '';
+    formData.company = '';
     createMessage.success(t('sys.api.operationSuccess'));
     handleBackLogin();
   }

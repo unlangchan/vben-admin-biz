@@ -99,6 +99,7 @@ export default {
     policyPlaceholder: 'Register after checking',
     diffPwd: 'The two passwords are inconsistent',
     emailPlaceholder: 'Email is not a valid email!',
+    companyPlaceholder: 'Please input company!',
 
     userName: 'Username',
     password: 'Password',
@@ -108,5 +109,6 @@ export default {
     emailCode: 'Email code',
     smsCode: 'SMS code',
     mobile: 'Mobile',
+    company: 'Company',
   },
 };

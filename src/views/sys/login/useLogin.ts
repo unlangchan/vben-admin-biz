@@ -107,6 +107,13 @@ export function useFormRules(formData?: Recordable) {
             { validator: validateConfirmPassword(formData?.password), trigger: 'change' },
           ],
           policy: [{ validator: validatePolicy, trigger: 'change' }],
+          company: [
+            {
+              required: true,
+              message: t('sys.login.companyPlaceholder'),
+              trigger: 'change',
+            },
+          ],
           // ...mobileRule,
         };
 

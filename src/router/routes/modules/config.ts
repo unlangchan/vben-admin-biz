@@ -31,6 +31,15 @@ const config: AppRouteModule = {
       },
       component: () => import('/@/views/fund-management/keywordConfig.vue'),
     },
+    {
+      path: 'staffAndCompany',
+      name: 'staffAndCompany',
+      meta: {
+        title: t('page.page5.title'),
+        roles: [RoleEnum.SUPER],
+      },
+      component: () => import('/@/views/fund-management/staffAndCompany.vue'),
+    },
   ],
 };
 
