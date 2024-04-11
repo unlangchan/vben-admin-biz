@@ -75,7 +75,6 @@
       Upload,
       Row,
       Col,
-      Textarea,
       Button,
       Tag,
       TableColumn,
