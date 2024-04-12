@@ -7,6 +7,7 @@
             v-model:value="formData1.value"
             :placeholder="t('page.page4.textareaPlaceholder')"
             :auto-size="{ minRows: 5, maxRows: 10 }"
+            @keydown="keydownHandler"
           />
         </Col>
         <Col flex="100px" style="margin-left: 10px">
@@ -23,7 +24,10 @@
       <BasicForm submitOnReset @register="registerForm" @submit="handleSearchInfoFn"> </BasicForm>
       <BasicTable @register="registerTable">
         <template #bodyCell="{ column, text }">
-          <template v-if="column.dataIndex === 'debit'">
+          <template v-if="column.dataIndex === 'content'">
+            <div class="columStyle2">{{ text }}</div>
+          </template>
+          <template v-else-if="column.dataIndex === 'debit'">
             <div class="columStyle1">{{ text }}</div>
           </template>
           <template v-else-if="column.dataIndex === 'credit'">
@@ -51,6 +55,7 @@
     Tag,
     TableColumn,
     TableColumnGroup,
+    InputProps,
   } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { api_entry_content_list, api_entry_parse } from '/@/api';
@@ -156,12 +161,14 @@
             title: 'Debit',
             dataIndex: 'debit',
             width: 250,
+            align: 'left',
             sorter: true,
           },
           {
             title: 'Credit',
             dataIndex: 'credit',
             width: 250,
+            align: 'left',
             sorter: true,
           },
           {
@@ -226,11 +233,65 @@
         formData1.errorInfoList = [];
         let data = await api_entry_parse(formData);
         if (data.errorInfoList.length > 0) {
-          formData1.errorInfoList = data.errorInfoList;
+          formData1.errorInfoList = data.errorInfoList.map((item) => {
+            if (item.content !== formData1.value) {
+              item.errorInfo = `${item.content}: ${item.errorInfo}`;
+            }
+            return item;
+          });
           createMessage.warning(t('sys.api.operationFailed'));
         } else {
           createMessage.success(t('sys.api.operationSuccess'));
+          formData1.value = '';
+          formData1.errorInfoList = [];
           submit();
+        }
+      }
+      let keyCodeStack = [];
+      function injectEnd(e) {
+        let elem = e.target;
+        let startTarget = elem.selectionStart;
+        let endTarget = elem.selectionEnd;
+        let oldText = elem.value;
+        let startText: String = oldText.substring(0, startTarget);
+        startText = startText.trim();
+        if (startText.slice(-1) !== '.') {
+          startText += '.';
+        }
+        let result = startText + oldText.substring(endTarget);
+        elem.value = result;
+        elem.focus();
+        let newFocusIndex = startText.length;
+        elem.selectionStart = newFocusIndex;
+        elem.selectionEnd = newFocusIndex;
+      }
+      function injectBreak(e) {
+        let elem = e.target;
+        let startTarget = elem.selectionStart;
+        let endTarget = elem.selectionEnd;
+        let oldText = elem.value;
+        let startText: String = oldText.substring(0, startTarget);
+        startText = startText.trim();
+        if (startText.slice(-2).indexOf(',') === -1) {
+          startText += ', ';
+        }
+        let result = startText + oldText.substring(endTarget);
+        elem.value = result;
+        elem.focus();
+        let newFocusIndex = startText.length;
+        elem.selectionStart = newFocusIndex;
+        elem.selectionEnd = newFocusIndex;
+      }
+      function keydownHandler(e: KeyboardEvent) {
+        keyCodeStack.push(e.keyCode);
+        keyCodeStack = keyCodeStack.slice(-5);
+        console.log(e);
+        if (e.keyCode === 13) {
+          injectEnd(e);
+        } else if (e.keyCode === 32) {
+          if (keyCodeStack[keyCodeStack.length - 1] === keyCodeStack[keyCodeStack.length - 2]) {
+            injectBreak(e);
+          }
         }
       }
 
@@ -241,6 +302,7 @@
         handleSearchInfoFn,
         formData1,
         save,
+        keydownHandler,
       };
     },
   });
@@ -252,6 +314,8 @@
   .columStyle1 {
     word-break: break-all;
     white-space: pre;
-    text-align: left;
+  }
+  .columStyle2 {
+    white-space: normal;
   }
 </style>
