@@ -42,6 +42,10 @@
             <RegisterForm />
             <MobileForm />
             <!-- <QrCodeForm /> -->
+            <div style="padding: 10px">
+              备案号：
+              <a href="https://beian.miit.gov.cn/" target="_blank">鄂ICP备2023007162号-2</a>
+            </div>
           </div>
         </div>
       </div>
