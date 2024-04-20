@@ -12,6 +12,6 @@ jobs:
         uses: actions-cool/issues-helper@v2.1.1
         with:
           actions: 'close-issues'
-          token: ${{ secrets.OPER_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           labels: 'need reproduction'
           inactive-day: 3
