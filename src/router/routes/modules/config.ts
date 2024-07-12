@@ -40,6 +40,15 @@ const config: AppRouteModule = {
       },
       component: () => import('@/views/configs/staffAndCompany.vue'),
     },
+    {
+      path: 'categoryEntry',
+      name: 'categoryEntry',
+      meta: {
+        title: t('page.page6.title'),
+        roles: [RoleEnum.SUPER],
+      },
+      component: () => import('/@/views/configs/categoryEntry.vue'),
+    },
   ],
 };
 

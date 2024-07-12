@@ -214,3 +214,44 @@ export const api_entry_newStoreInput = (params: any) =>
         ignoreCancelToken: true,
       },
     }, params);
+
+/** 类别删 */
+export const api_entry_category_del = (params: any) =>
+  defHttp
+    .get({
+      url: `/v3/entry/category/del`,
+      params,
+      headers: {
+        ignoreCancelToken: true,
+      },
+    });
+/** 类别查tree */
+export const api_entry_category_tree = (params: any) =>
+  defHttp
+    .get({
+      url: `/v3/entry/category/tree`,
+      params,
+      headers: {
+        ignoreCancelToken: true,
+      },
+    });
+/** 类别增 */
+export const api_entry_category_save = (params: any) =>
+  defHttp
+    .post({
+      url: `/v3/entry/category/save`,
+      params,
+      headers: {
+        ignoreCancelToken: true,
+      },
+    });
+/** 类别改 */
+export const api_entry_category_update = (params: any) =>
+  defHttp
+    .post({
+      url: `/v3/entry/category/update`,
+      params,
+      headers: {
+        ignoreCancelToken: true,
+      },
+    });

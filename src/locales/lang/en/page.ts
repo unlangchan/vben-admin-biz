@@ -54,4 +54,7 @@ export default {
     title: 'Staff and company',
     import: 'Import',
   },
+  page6: {
+    title: 'CategoryEntry',
+  },
 };

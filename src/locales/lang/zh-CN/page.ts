@@ -54,4 +54,7 @@ export default {
     title: 'Staff and company',
     import: '导入',
   },
+  page6: {
+    title: '类别配置',
+  },
 };
