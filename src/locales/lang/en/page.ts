@@ -60,4 +60,7 @@ export default {
   page7: {
     title: 'SubjectEntry',
   },
+  page8: {
+    title: 'EntryConfig',
+  },
 };

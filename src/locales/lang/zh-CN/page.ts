@@ -60,4 +60,7 @@ export default {
   page7: {
     title: '科目配置',
   },
+  page8: {
+    title: '分录配置',
+  },
 };

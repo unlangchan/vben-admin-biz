@@ -290,3 +290,48 @@ export const api_entry_subject_save = (params: any) =>
         ignoreCancelToken: true,
       },
     });
+/** 分录配置删 */
+export const api_entry_cfg_del = (params: any) =>
+  defHttp
+    .get({
+      url: `/v3/entry/cfg/del`,
+      params,
+      headers: {
+        ignoreCancelToken: true,
+      },
+    });
+/** 分录配置查 */
+export const api_entry_cfg_page = (params: any) =>
+  defHttp
+    .get({
+      url: `/v3/entry/cfg/page`,
+      params,
+      headers: {
+        ignoreCancelToken: true,
+      },
+    }).then((data) => {
+      return {
+        items: data.records,
+        total: Number(data.total),
+      };
+    });
+/** 分录配置增 */
+export const api_entry_cfg_save = (params: any) =>
+  defHttp
+    .post({
+      url: `/v3/entry/cfg/save`,
+      params,
+      headers: {
+        ignoreCancelToken: true,
+      },
+    });
+/** 分录配置增 */
+export const api_entry_cfg_update= (params: any) =>
+  defHttp
+    .post({
+      url: `/v3/entry/cfg/update`,
+      params,
+      headers: {
+        ignoreCancelToken: true,
+      },
+    });
