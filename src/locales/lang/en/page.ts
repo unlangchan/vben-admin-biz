@@ -57,4 +57,7 @@ export default {
   page6: {
     title: 'CategoryEntry',
   },
+  page7: {
+    title: 'SubjectEntry',
+  },
 };

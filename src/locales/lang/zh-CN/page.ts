@@ -57,4 +57,7 @@ export default {
   page6: {
     title: '类别配置',
   },
+  page7: {
+    title: '科目配置',
+  },
 };

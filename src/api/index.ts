@@ -255,3 +255,38 @@ export const api_entry_category_update = (params: any) =>
         ignoreCancelToken: true,
       },
     });
+/** 科目表删 */
+export const api_entry_subject_del = (params: any) =>
+  defHttp
+    .get({
+      url: `/v3/entry/subject/del`,
+      params,
+      headers: {
+        ignoreCancelToken: true,
+      },
+    });
+/** 科目表查 */
+export const api_entry_subject_page = (params: any) =>
+  defHttp
+    .get({
+      url: `/v3/entry/subject/page`,
+      params,
+      headers: {
+        ignoreCancelToken: true,
+      },
+    }).then((data) => {
+      return {
+        items: data.records,
+        total: Number(data.total),
+      };
+    });
+/** 科目表增 */
+export const api_entry_subject_save = (params: any) =>
+  defHttp
+    .post({
+      url: `/v3/entry/subject/save`,
+      params,
+      headers: {
+        ignoreCancelToken: true,
+      },
+    });
