@@ -52,16 +52,13 @@
 
   import { CollapseContainer } from '/@/components/Container';
   import { PageWrapper } from '/@/components/Page';
-  import { Alert, Card, TreeSelect, Drawer, Row, Col, Input } from 'ant-design-vue';
-  import type { TreeSelectProps } from 'ant-design-vue';
+  import { Alert, Card, Drawer, Row, Col, Input } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import {
     api_entry_category_del,
     api_entry_category_save,
     api_entry_category_tree,
     api_entry_category_update,
-    api_entry_dict_list,
-    api_entry_newStoreInput,
   } from '/@/api';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
@@ -79,7 +76,6 @@
       BasicTable,
       AAlert: Alert,
       Card,
-      TreeSelect,
       TableAction,
       Drawer,
       Row,
@@ -150,7 +146,6 @@
         },
       });
       const resData = ref();
-      const treeData = ref<TreeSelectProps['treeData']>([]);
       const value = ref<string>();
       const currentEditKeyRef = ref('');
       const visible = ref<boolean>(false);
@@ -168,44 +163,17 @@
         visible.value = false;
       };
 
-      function translateTreeDataFn(o) {
-        let list = [];
-        for (let i = 0; i < o.length; i++) {
-          const element = o[i];
-          let temp = {
-            ...element,
-            label: `${element.categoryName}(${element.categoryCode})`,
-            value: element.categoryCode,
-          };
-          if (element['children'] instanceof Array && element['children'].length > 0) {
-            temp['children'] = translateTreeDataFn(element['children']);
-          }
-          list.push(temp);
-        }
-        return list;
-      }
-
       async function handleSearchInfoFn(params) {
         openFullLoading();
         try {
           let res = await api_entry_category_tree({});
           resData.value = res;
-          treeData.value = translateTreeDataFn(res);
+          setTableData(res);
+          setPagination({ current: 1 });
           handleChangeFn();
         } catch (error) {}
         closeFullLoading();
       }
-      async function handleChangeFn(e, label, extra) {
-        let temp: Array;
-        if (e) {
-          temp = extra.triggerNode.props.children;
-        } else {
-          temp = treeData.value;
-        }
-        setTableData(temp);
-        setPagination({ current: 1 });
-      }
-
       function handleEdit(record: EditRecordRow) {
         currentEditKeyRef.value = record.key;
         record.onEdit?.(true);
@@ -314,8 +282,6 @@
         registerTable,
         registerForm,
         handleSearchInfoFn,
-        handleChangeFn,
-        treeData,
         value,
         createActions,
         visible,
